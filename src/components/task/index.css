@@ -1,0 +1,39 @@
+.task p, .task h1 {
+  text-align: left;
+}
+
+.task h1 {
+  font-size: 22px;
+  font-weight: 100;
+  margin-bottom: 7px;
+}
+
+.task {
+  text-align: right;
+  margin: 10px 0 ;
+  padding: 6px;
+  border-radius: 5px;
+  background: #F1EFFF;
+}
+
+.task p {
+  padding: 0 3px;
+}
+
+.taskDescription {
+  margin: 10px 0;
+}
+
+.row {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+._button {
+  background: #7159C1;
+  color: #FFF;
+  border: none;
+  margin: 5px;
+  padding: 8px;
+  border-radius: 5px;
+}

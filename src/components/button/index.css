@@ -1,0 +1,9 @@
+.button button {
+  background: #7159C1;
+  color: #FFF;
+  border: none;
+  width: 100px;
+  height: 100px;
+  font-size: 15px;
+  cursor: pointer;
+}

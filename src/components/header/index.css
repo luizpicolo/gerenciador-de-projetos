@@ -1,0 +1,21 @@
+.header {
+  display: flex;
+  background: #7159C1;
+  padding: 6px;
+  height: 150px;
+  align-items: center;
+}
+
+.headerTitle {
+  color: #FFF;
+  text-align: left;
+  padding-left: 1%;
+  width: 50%; 
+}
+
+.counters {
+  display: flex;
+  color: #FFF;
+  justify-content: flex-end;
+  width: 50%
+}

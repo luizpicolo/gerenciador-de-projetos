@@ -1,0 +1,9 @@
+.counter {
+  padding: 6px;
+  text-align: right;
+  font-weight: 100;
+}
+
+.counterAmount {
+  font-size: 25px;
+}
