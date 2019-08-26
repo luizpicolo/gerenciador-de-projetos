@@ -13,12 +13,43 @@ h1, h2, ul, li, p {
   padding: 0;
 }
 
-.button {
+.buttonAdd {
   position: fixed;
   bottom: 10px;
-  right: 10px; 
+  right: 10px;
 }
 
-.button button {
-  border-radius: 50%;
+.buttonAdd button {
+  width: 70px;
+  height: 70px;
+  font-size: 15px;
+  border-radius: 50% !important;
+}
+
+.buttonAdd .plusIcon {
+  font-size: 25px;
+}
+
+.Tasks {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  background-color: papayawhip;
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rebeccapurple;
+  opacity: 0.5; 
 }

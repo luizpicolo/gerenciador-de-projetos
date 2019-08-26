@@ -22,7 +22,6 @@ class Index extends Component {
         </div>
         {/* <img src={HeaderImage} /> */}
       </header>
-
       </>
     );
   }

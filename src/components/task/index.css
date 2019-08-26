@@ -29,11 +29,17 @@
   margin-left: 0 !important;
 }
 
-._button {
+.buttonActions {
+  display: flex;
+  flex-direction: row-reverse
+}
+
+.buttonActions button {
   background: #7159C1;
   color: #FFF;
   border: none;
   margin: 5px;
   padding: 8px;
+  font-size: 13px;
   border-radius: 5px;
 }
