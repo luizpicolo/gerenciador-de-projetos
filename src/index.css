@@ -41,7 +41,71 @@ h1, h2, ul, li, p {
   left: 40px;
   right: 40px;
   bottom: 40px;
-  background-color: papayawhip;
+  padding: 20px;
+  background-color: #7159C1;
+  border-radius: 5px;
+  border: 1px solid #4b4b4b;
+}
+
+@media screen and (min-width: 480px) {
+  .Modal {
+    width: 50%
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .Modal {
+    width: 90%
+  }
+}
+
+.Modal h2 {
+  color: #FFF !important;
+  text-align: center
+}
+
+.Modal .buttomCloseModal {
+  text-align: right;
+}
+
+.Modal .buttomCloseModal button {
+  border: none;
+  background: #7159C1;
+  color: #FFF;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.Modal label {
+  color: #FFF;
+  display: block;
+  font-size: 17px;
+}
+
+.Modal input[type='text']{
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 5px;
+  border: none;
+}
+
+.Modal input[type='submit']{
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 5px;
+  background: #FFF;
+  border: none
+}
+
+.Modal textarea {
+  width: 100%;
+  height: 100px;
+}
+
+.Modal form div {
+  margin-bottom: 10px;
 }
 
 .Overlay {
@@ -49,7 +113,23 @@ h1, h2, ul, li, p {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background-color: rebeccapurple;
-  opacity: 0.5; 
+  bottom: 0; 
+}
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
 }
