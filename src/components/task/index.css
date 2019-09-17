@@ -14,6 +14,8 @@
   padding: 6px;
   border-radius: 5px;
   background: #F1EFFF;
+  animation: fadeIn 2s;
+  /* animation: fadeOut 2s forwards; */
 }
 
 .task p {
@@ -27,6 +29,7 @@
 .row {
   margin-right: 0 !important;
   margin-left: 0 !important;
+  overflow: hidden;
 }
 
 .buttonActions {
@@ -42,4 +45,31 @@
   padding: 8px;
   font-size: 13px;
   border-radius: 5px;
+}
+
+.isDeleted {
+  animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeIn {
+  /* from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  } */
+}
+
+@keyframes fadeOut {
+  /* from {
+    opacity: 1;
+    transform: translate(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-400px);
+    display: none
+  }  */
 }

@@ -9,37 +9,39 @@ import './App.css';
 import '../node_modules/flexboxgrid/css/flexboxgrid.min.css'
 
 const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
   }
 };
 
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       modalIsOpen: false,
       tasks: [
-        {id: 1, title: 'teste 1', description: 'lorem ipsum dollar', date: '12/12/1212', status: true},
-        {id: 2, title: 'teste 2', description: 'lorem ipsum dollar', date: '12/12/1212', status: true},
-        {id: 3, title: 'teste 3', description: 'lorem ipsum dollar', date: '12/12/1212', status: true},
-        {id: 4, title: 'teste 4', description: 'lorem ipsum dollar', date: '12/12/1212', status: true},
-        {id: 5, title: 'teste 5', description: 'lorem ipsum dollar', date: '12/12/1212', status: true},        
-      ]
+        { title: 'teste 1', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
+        { title: 'teste 2', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
+        { title: 'teste 3', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
+        { title: 'teste 4', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
+        { title: 'teste 5', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
+      ],
+      taskAttr: ''
     }
-    this._new = this._new.bind(this);
+
+    this.createTask = this.createTask.bind(this);
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
   openModal() {
-    this.setState({modalIsOpen: true});
+    this.setState({ modalIsOpen: true });
   }
 
   afterOpenModal() {
@@ -47,53 +49,79 @@ class App extends Component {
   }
 
   closeModal() {
-    this.setState({modalIsOpen: false});
+    this.setState({ modalIsOpen: false });
   }
 
-  _new(event){
+  newTask(event) {
+    let task = {
+      title: event.target.title.value,
+      description: event.target.description.value,
+      date: event.target.title.date,
+      status: true
+    }
+
+    return task;
+  }
+
+  createTask(event) {
     event.preventDefault();
-    console.log("Criando...")
-  }
-
-  edit(){
-    this.setState({modalIsOpen: true});
-  }
-
-  delete(task, event){
-    let tasks = [...this.state.tasks];
-    let position = tasks.indexOf(task)
+    this.setState({ taskAttr: '' });
+    let tasks = [...this.state.tasks]
+    let position = event.target.position.value;
     if (position !== -1) {
-      if (window.confirm('Deseja realmente deletar esta tarefa?')){
-        tasks.splice(position, 1);
-        this.setState({tasks: tasks});
-      }      
+      tasks[position] = this.newTask(event);
+      this.setState({ tasks: tasks });
+      this.closeModal();
+    } else {
+      if (tasks.unshift(this.newTask(event)) !== -1) {
+        alert('Tarefa adicionada com sucesso');
+        this.setState({ tasks: tasks });
+        this.closeModal();
+      }
     }
   }
 
-  changeStatus(event){
+  editTask(task, event) {
+    this.setState({ taskAttr: task });
+    this.setState({ modalIsOpen: true });
+  }
+
+  delete(task, event) {
+    let tasks = [...this.state.tasks];
+    let position = tasks.indexOf(task);
+    if (position !== -1) {
+      if (window.confirm('Deseja realmente deletar esta tarefa?')) {
+        tasks.splice(position, 1);
+        this.setState({ tasks: tasks });
+      }
+    }
+  }
+
+  changeStatus(event) {
     event.preventDefault();
     console.log("Mudando Status...")
   }
 
-  render(){
+  render() {
     return (
       <div className="App">
         <Header title="Gerenciador de Projetos" />
         <div className="Tasks row">
-          {this.state.tasks.map((task) => {
-            return <Task 
+          {this.state.tasks.map((task, index) => {
+            return <Task
               value={task}
-              className="col-xs-12 col-sm-8 col-md-6 col-lg-4" 
-              edit={this.edit.bind(this)}
+              key={index}
+              className={"col-xs-12 col-sm-8 col-md-6 col-lg-4"}
+              edit={this.editTask.bind(this, task)}
               delete={this.delete.bind(this, task)}
               status={this.changeStatus.bind(this)}
-            />  
+            />
           })}
         </div>
-        <div className="buttonAdd">   
+        <div className="buttonAdd">
           <Button value={
-            <FontAwesomeIcon 
-              icon={faPlus} 
+            <FontAwesomeIcon
+              icon={faPlus}
               className='plusIcon'
             />
           } onClick={this.openModal} />
@@ -110,27 +138,28 @@ class App extends Component {
         >
           <div className="buttomCloseModal">
             <button onClick={this.closeModal}>
-              <FontAwesomeIcon 
+              <FontAwesomeIcon
                 icon={faTimes}
               />
             </button>
           </div>
           <h2 ref={subtitle => this.subtitle = subtitle}>Adicionar Tarefa</h2>
           <br />
-          <form>
+          <form onSubmit={this.createTask}>
             <div>
-              <label for="title">Título</label>
-              <input name="title" type="text" />
+              <label htmlFor="title">Título</label>
+              <input name="title" type="text" defaultValue={this.state.taskAttr.title} />
             </div>
             <div>
-              <label for="date">Data</label>
-              <input name="date" type="text" />
+              <label htmlFor="date">Data</label>
+              <input name="date" type="text" defaultValue={this.state.taskAttr.date} />
             </div>
             <div>
-              <label for="date">Descrição</label>
-              <textarea></textarea>
+              <label htmlFor="date">Descrição</label>
+              <textarea name="description" defaultValue={this.state.taskAttr.description}></textarea>
             </div>
             <div>
+              <input name="position" type="text" defaultValue={this.state.tasks.indexOf(this.state.taskAttr)} />
               <input type="submit" value="Salvar" />
             </div>
           </form>
