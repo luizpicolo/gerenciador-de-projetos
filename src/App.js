@@ -63,22 +63,35 @@ class App extends Component {
     return task;
   }
 
+  saveTask(event) {
+    event.preventDefault();
+    let position = event.target.position.value;
+    if (position !== '-1') {
+      this.updateTask(position, event)
+    } else {
+      this.createTask(event);
+    }
+  }
+
   createTask(event) {
     event.preventDefault();
     this.setState({ taskAttr: '' });
     let tasks = [...this.state.tasks]
-    let position = event.target.position.value;
-    if (position !== -1) {
-      tasks[position] = this.newTask(event);
+    if (tasks.unshift(this.newTask(event)) !== -1) {
+      alert('Tarefa adicionada com sucesso');
       this.setState({ tasks: tasks });
       this.closeModal();
-    } else {
-      if (tasks.unshift(this.newTask(event)) !== -1) {
-        alert('Tarefa adicionada com sucesso');
-        this.setState({ tasks: tasks });
-        this.closeModal();
-      }
     }
+  }
+
+  updateTask(position, event) {
+    event.preventDefault();
+    this.setState({ taskAttr: '' });
+    let tasks = [...this.state.tasks]
+    tasks[position] = this.newTask(event);
+    alert('Tarefa atualizada com sucesso');
+    this.setState({ tasks: tasks });
+    this.closeModal();
   }
 
   editTask(task, event) {
@@ -145,7 +158,7 @@ class App extends Component {
           </div>
           <h2 ref={subtitle => this.subtitle = subtitle}>Adicionar Tarefa</h2>
           <br />
-          <form onSubmit={this.createTask}>
+          <form onSubmit={this.saveTask.bind(this)}>
             <div>
               <label htmlFor="title">Título</label>
               <input name="title" type="text" defaultValue={this.state.taskAttr.title} />
