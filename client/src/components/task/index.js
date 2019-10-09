@@ -5,10 +5,6 @@ import { faCheck, faTrash, faPen } from '@fortawesome/free-solid-svg-icons'
 import './index.css';
 
 class Task extends Component {
-  // constructor(props){
-  //   super(props)
-  // }
-
   render() {
     return (
       <div className={this.props.className}>

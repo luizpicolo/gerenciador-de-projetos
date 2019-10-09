@@ -6,17 +6,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import Modal from 'react-modal';
 import './App.css';
-import '../node_modules/flexboxgrid/css/flexboxgrid.min.css'
+import '../node_modules/flexboxgrid/css/flexboxgrid.min.css';
+import Axios from 'axios';
+import Configs from './config';
 
 const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
+  content: Configs.customStyles
 };
 
 class App extends Component {
@@ -24,13 +19,7 @@ class App extends Component {
     super(props)
     this.state = {
       modalIsOpen: false,
-      tasks: [
-        { title: 'teste 1', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
-        { title: 'teste 2', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
-        { title: 'teste 3', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
-        { title: 'teste 4', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
-        { title: 'teste 5', description: 'lorem ipsum dollar', date: '12/12/1212', status: true },
-      ],
+      tasks: [],
       taskAttr: ''
     }
 
@@ -38,6 +27,24 @@ class App extends Component {
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+  }
+
+  componentDidMount(){
+    // fetch('http://localhost:3000/tasks')
+    //   .then(res => res.json())
+    //   .then(result => {
+    //       this.setState({tasks: result});
+    //     }, error => {
+    //       this.setState({error});
+    //     }
+    //   )
+    Axios.get(Configs.urlToServer)
+    .then(response => {
+      this.setState({ tasks: response.data });
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 
   openModal() {
@@ -69,13 +76,13 @@ class App extends Component {
     if (position !== '-1') {
       this.updateTask(position, event)
     } else {
+      this.setState({ taskAttr: '' });
       this.createTask(event);
     }
   }
 
   createTask(event) {
     event.preventDefault();
-    this.setState({ taskAttr: '' });
     let tasks = [...this.state.tasks]
     if (tasks.unshift(this.newTask(event)) !== -1) {
       alert('Tarefa adicionada com sucesso');
@@ -172,7 +179,7 @@ class App extends Component {
               <textarea name="description" defaultValue={this.state.taskAttr.description}></textarea>
             </div>
             <div>
-              <input name="position" type="text" defaultValue={this.state.tasks.indexOf(this.state.taskAttr)} />
+              <input name="position" type="hidden" defaultValue={this.state.tasks.indexOf(this.state.taskAttr)} />
               <input type="submit" value="Salvar" />
             </div>
           </form>
