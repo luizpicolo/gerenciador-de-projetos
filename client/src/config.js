@@ -1,5 +1,5 @@
 module.exports = {
-  'urlToServer': 'http://localhost:3000/tasks',
+  'urlToServer': 'http://localhost:3001/tasks',
   'customStyles': {
     top: '50%',
     left: '50%',

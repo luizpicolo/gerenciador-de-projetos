@@ -20,31 +20,42 @@ class App extends Component {
     this.state = {
       modalIsOpen: false,
       tasks: [],
-      taskAttr: ''
+      taskAttr: '',
+      unfinished: 0,
+      finished: 0
     }
 
     this.createTask = this.createTask.bind(this);
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.unfinished = this.unfinished.bind(this);
+    this.unfinished();
   }
 
   componentDidMount(){
-    // fetch('http://localhost:3000/tasks')
-    //   .then(res => res.json())
-    //   .then(result => {
-    //       this.setState({tasks: result});
-    //     }, error => {
-    //       this.setState({error});
-    //     }
-    //   )
     Axios.get(Configs.urlToServer)
     .then(response => {
-      this.setState({ tasks: response.data });
+      this.setState({ tasks: response.data })
     })
     .catch(error => {
       console.log(error);
     });
+  }
+
+  async unfinished(){
+    let a = await this.counterTask(true);
+    this.setState({ unfinished: a })
+  }
+
+  async finished(){
+    let a = await this.counterTask(false);
+    this.setState({ finished: a})
+  }
+  
+  async counterTask(type){
+    let res = await Axios.get(Configs.urlToServer + '/countertask?type=' + type);
+    return res.data;
   }
 
   openModal() {
@@ -72,6 +83,7 @@ class App extends Component {
 
   saveTask(event) {
     event.preventDefault();
+    console.log(123);
     let position = event.target.position.value;
     if (position !== '-1') {
       this.updateTask(position, event)
@@ -82,13 +94,18 @@ class App extends Component {
   }
 
   createTask(event) {
-    event.preventDefault();
-    let tasks = [...this.state.tasks]
-    if (tasks.unshift(this.newTask(event)) !== -1) {
-      alert('Tarefa adicionada com sucesso');
+    let task = this.newTask(event);
+    Axios.post(Configs.urlToServer, { task: task })
+    .then(response => {
+      const tasks = [task, ...this.state.tasks];
       this.setState({ tasks: tasks });
+      this.unfinished();
+      this.finished();
       this.closeModal();
-    }
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 
   updateTask(position, event) {
@@ -115,6 +132,13 @@ class App extends Component {
         this.setState({ tasks: tasks });
       }
     }
+    // Axios.delete(Configs.urlToServer)
+    // .then(response => {
+    //   this.setState({ tasks: response.data });
+    // })
+    // .catch(error => {
+    //   console.log(error);
+    // });
   }
 
   changeStatus(event) {
@@ -125,7 +149,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header title="Gerenciador de Projetos" />
+        <Header 
+          title="Gerenciador de Projetos" 
+          unfinished={this.state.unfinished} 
+          finished={this.state.finished}  
+        />
         <div className="Tasks row">
           {this.state.tasks.map((task, index) => {
             return <Task
