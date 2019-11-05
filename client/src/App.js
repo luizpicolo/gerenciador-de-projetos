@@ -25,22 +25,13 @@ class App extends Component {
       finished: 0
     }
 
-    this.createTask = this.createTask.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.unfinished = this.unfinished.bind(this);
     this.unfinished();
+    this.finished();
   }
 
-  componentDidMount(){
-    Axios.get(Configs.urlToServer)
-    .then(response => {
-      this.setState({ tasks: response.data })
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  async componentDidMount(){
+    let response = await Axios.get(Configs.urlToServer)
+    this.setState({ tasks: response.data })
   }
 
   async unfinished(){
@@ -53,20 +44,20 @@ class App extends Component {
     this.setState({ finished: a})
   }
   
-  async counterTask(type){
+  counterTask = async (type) =>{
     let res = await Axios.get(Configs.urlToServer + '/countertask?type=' + type);
     return res.data;
   }
 
-  openModal() {
+  openModal = () => {
     this.setState({ modalIsOpen: true });
   }
 
-  afterOpenModal() {
+  afterOpenModal = () => {
     this.subtitle.style.color = '#f00';
   }
 
-  closeModal() {
+  closeModal = () => {
     this.setState({ modalIsOpen: false });
   }
 
@@ -81,7 +72,7 @@ class App extends Component {
     return task;
   }
 
-  saveTask(event) {
+  saveTask = (event) => {
     event.preventDefault();
     console.log(123);
     let position = event.target.position.value;
@@ -93,7 +84,7 @@ class App extends Component {
     }
   }
 
-  createTask(event) {
+  createTask = (event) => {
     let task = this.newTask(event);
     Axios.post(Configs.urlToServer, { task: task })
     .then(response => {
@@ -123,22 +114,25 @@ class App extends Component {
     this.setState({ modalIsOpen: true });
   }
 
-  delete(task, event) {
+  delete(task, event){
     let tasks = [...this.state.tasks];
     let position = tasks.indexOf(task);
-    if (position !== -1) {
-      if (window.confirm('Deseja realmente deletar esta tarefa?')) {
+    
+    if (window.confirm('Deseja realmente deletar esta tarefa?')) {
+      Axios.delete(Configs.urlToServer, { 
+          params: { id: task._id } 
+        }
+      )
+      .then(() => {
         tasks.splice(position, 1);
         this.setState({ tasks: tasks });
-      }
+        this.unfinished();
+        this.finished();
+      })
+      .catch(error => {
+        console.log(error);
+      });
     }
-    // Axios.delete(Configs.urlToServer)
-    // .then(response => {
-    //   this.setState({ tasks: response.data });
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // });
   }
 
   changeStatus(event) {
@@ -193,7 +187,7 @@ class App extends Component {
           </div>
           <h2 ref={subtitle => this.subtitle = subtitle}>Adicionar Tarefa</h2>
           <br />
-          <form onSubmit={this.saveTask.bind(this)}>
+          <form onSubmit={this.saveTask}>
             <div>
               <label htmlFor="title">Título</label>
               <input name="title" type="text" defaultValue={this.state.taskAttr.title} />

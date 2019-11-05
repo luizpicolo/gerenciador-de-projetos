@@ -5,8 +5,8 @@ const Task = require('../models/task');
 
 /* GET home page. */
 router.get('/tasks', async (req, res, next) => {
-  await Task.create({title: 'Nome da Tarefa', description: 'Descrição da Tarefa', status: true})
-  var tasks = await Task.find().sort({ date: -1});
+  // await Task.create({title: 'Nome da Tarefa', description: 'Descrição da Tarefa', status: true})
+  var tasks = await Task.find().sort({ _id: -1});
   res.send(JSON.stringify(tasks));
 });
 
@@ -25,7 +25,7 @@ router.post('/tasks', (req, res, next) => {
 })
 
 router.delete('/tasks', (req, res, next) => {
-  Task.remove({ _id: req.body.id }, (err) => {
+  Task.deleteOne({ _id: req.query.id }, (err) => {
     if (!err) {
       res.send(req.body)
     } else {
