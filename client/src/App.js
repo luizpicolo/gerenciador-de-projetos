@@ -74,10 +74,9 @@ class App extends Component {
 
   saveTask = (event) => {
     event.preventDefault();
-    console.log(123);
-    let position = event.target.position.value;
-    if (position !== '-1') {
-      this.updateTask(position, event)
+    let id = event.target._id.value || false;
+    if (id) {
+      this.updateTask(id, event)
     } else {
       this.setState({ taskAttr: '' });
       this.createTask(event);
@@ -87,8 +86,8 @@ class App extends Component {
   createTask = (event) => {
     let task = this.newTask(event);
     Axios.post(Configs.urlToServer, { task: task })
-    .then(response => {
-      const tasks = [task, ...this.state.tasks];
+    .then((result) => {
+      const tasks = [result.data, ...this.state.tasks];
       this.setState({ tasks: tasks });
       this.unfinished();
       this.finished();
@@ -99,14 +98,28 @@ class App extends Component {
     });
   }
 
-  updateTask(position, event) {
-    event.preventDefault();
-    this.setState({ taskAttr: '' });
-    let tasks = [...this.state.tasks]
-    tasks[position] = this.newTask(event);
-    alert('Tarefa atualizada com sucesso');
-    this.setState({ tasks: tasks });
-    this.closeModal();
+  filterValue(id) {
+    return this.state.tasks.find((task) => { 
+      return task._id === id
+    });
+  }
+
+  updateTask(id, event) {
+    let task = this.newTask(event);
+    Axios.put(Configs.urlToServer, { task: task })
+    .then(() => {
+      let position = this.state.tasks.indexOf(this.filterValue(id))
+      const tasks = [...this.state.tasks];
+      task._id = id;
+      tasks[position] = task;
+      this.setState({ tasks: tasks });
+      this.unfinished();
+      this.finished();
+      this.closeModal();
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 
   editTask(task, event) {
@@ -201,7 +214,7 @@ class App extends Component {
               <textarea name="description" defaultValue={this.state.taskAttr.description}></textarea>
             </div>
             <div>
-              <input name="position" type="hidden" defaultValue={this.state.tasks.indexOf(this.state.taskAttr)} />
+              <input name="_id" type="hidden" defaultValue={this.state.taskAttr._id} />
               <input type="submit" value="Salvar" />
             </div>
           </form>
